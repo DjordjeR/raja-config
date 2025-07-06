@@ -41,6 +41,8 @@ else
     echo "All scripts are installed and available in your shell."
 fi
 
+# TODO: Change paths to the configure options 
 # Apply saved configurations
 ln -sf /home/raja/Projects/raja-config/configs/nvim ~/.config/nvimh
 ln -sf /home/raja/Projects/raja-config/configs/zshrc ~/.config/zsh/.zshrc
+ln -sf /home/raja/Projects/raja-config/sway/01-raja.conf /home/raja/.config/sway/config.d/01-raja.conf
