@@ -1,7 +1,7 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
 # ██                          RAJA UTILITIES                                  ██
-# ██        Development environment automation toolkit for Sway WM           ██
+# ██        Development environment automation toolkit for Sway WM            ██
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # -----------------------------------
@@ -22,6 +22,9 @@ ru() {
         op)
             ru_op "$@"
             ;;
+        ds)
+            ru_ds "$@"
+            ;;
         help|--help|-h)
             ru_help
             ;;
@@ -29,8 +32,8 @@ ru() {
             ru_version
             ;;
         *)
-            echo "Unknown command: $cmd"
-            echo "Use 'ru help' for usage information."
+            echo "Unknown command: $cmd" >&2
+            echo "Use 'ru help' for usage information." >&2
             return 1
             ;;
     esac
@@ -43,6 +46,7 @@ ru_help() {
     echo ""
     echo "Available commands:"
     echo "  op       Open project layout in Sway"
+    echo "  ds       Display setup: '<laptop|dock|toggle>'"
     echo "  help     Show this help message"
     echo "  version  Show version information"
     echo ""
@@ -58,6 +62,7 @@ ru_version() {
     echo "Raja Utils v$VERSION"
     echo "Development environment automation toolkit for Sway WM"
 }
+
 # -----------------------------------
 # COMMAND: op
 # -----------------------------------
@@ -84,7 +89,7 @@ ru_op() {
                 if [[ -z "$project_path" ]]; then
                     project_path="$1"
                 else
-                    echo "Unexpected argument: $1"
+                    echo "Unexpected argument: $1" >&2
                     return 1
                 fi
                 shift
@@ -93,27 +98,27 @@ ru_op() {
     done
     # Validate
     if [[ -z "$project_path" ]]; then
-        echo "Error: Project path is required."
-        echo "Usage: ru op <project_path> [-pt <c|python|rust>] [workspace_id]"
+        echo "Error: Project path is required." >&2
+        echo "Usage: ru op <project_path> [-pt <c|python|rust>] [workspace_id]" >&2
         return 1
     fi
     case "$project_type" in
         c|python|rust)
             ;;
         *)
-            echo "Error: Unsupported project type '$project_type'"
+            echo "Error: Unsupported project type '$project_type'" >&2
             return 1
             ;;
     esac
-    if ! command -v swaymsg >/dev/null || ! command -v "$TERMINAL" >/dev/null || ! command -v realpath >/dev/null; then
-        echo "Error: Required commands not found (swaymsg, $TERMINAL, realpath)"
+    if ! command -v swaymsg >/dev/null 2>&1 || ! command -v "$TERMINAL" >/dev/null 2>&1 || ! command -v realpath >/dev/null 2>&1; then
+        echo "Error: Required commands not found (swaymsg, $TERMINAL, realpath)" >&2
         return 1
     fi
-    project_path="$(realpath "$project_path")"
+    project_path="$(realpath "$project_path" 2>/dev/null)"
     if [[ "$project_type" == "c" ]]; then
         ru_op_c_layout "$project_path" "$workspace_id"
     else
-        echo "Project type '$project_type' not implemented yet."
+        echo "Project type '$project_type' not implemented yet." >&2
         return 1
     fi
 }
@@ -123,35 +128,80 @@ ru_op() {
 ru_op_c_layout() {
     local project_path="$1"
     local workspace_id="$2"
-    
-    # Switch to workspace
-    swaymsg "workspace number $workspace_id"
-    
-    # Launch first terminal with Vim - use proper alacritty syntax
-    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Vim' -e $SHELL_CMD -c 'nvim -c "vs"; exec $SHELL_CMD'"
-    sleep 1
-    
-    # Split vertically (this creates top/bottom split)  
-    swaymsg "split vertical"
-    
-    # Launch second terminal (goes to bottom)
-    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Build' $SHELL_EXEC_ARGS"
-    sleep 1
-    
-    # Split the bottom container horizontally
-    swaymsg "split horizontal"
-    
-    # Launch third terminal (goes to bottom-right)
-    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Run' $SHELL_EXEC_ARGS"
-    sleep 1
-    
-    # Focus the top container and resize
-    swaymsg "focus up"
-    swaymsg "resize set height 90 ppt"
+
+    # Combined swaymsg commands atomically, suppress stdout only
+    swaymsg "workspace number $workspace_id; \
+        exec $TERMINAL --working-directory \"$project_path\" --title 'Vim' -e $SHELL_CMD -c 'nvim -c \"vs\"; exec $SHELL_CMD'; \
+        split vertical; \
+        exec $TERMINAL --working-directory \"$project_path\" --title 'Build' $SHELL_EXEC_ARGS; \
+        split horizontal; \
+        exec $TERMINAL --working-directory \"$project_path\" --title 'Run' $SHELL_EXEC_ARGS; \
+        focus up; \
+        resize set height 90 ppt" >/dev/null
 }
+# -----------------------------------
+# COMMAND: ds (Display Setup)
+# -----------------------------------
+ru_ds() {
+    local mode="$1"
+
+    if [[ -z "$mode" ]]; then
+        echo "Error: Mode is required. Usage: ru ds <laptop|dock|toggle>" >&2
+        return 1
+    fi
+
+    if ! command -v swaymsg >/dev/null 2>&1; then
+        echo "Error: swaymsg command not found." >&2
+        return 1
+    fi
+
+    case "$mode" in
+        laptop)
+            # Build disable commands for all external outputs except eDP-1
+            local disable_cmds=""
+            while IFS= read -r output; do
+                disable_cmds+="output $output disable; "
+            done < <(swaymsg -t get_outputs | jq -r '.[] | select(.name != "eDP-1") | .name' 2>/dev/null)
+
+            # Run atomic command to enable laptop screen + disable others, suppress stdout
+            swaymsg "output eDP-1 enable scale 1.5 resolution 2560x1440; ${disable_cmds}" >/dev/null
+            echo "Switched to laptop mode."
+            ;;
+        dock)
+            mapfile -t external_outputs < <(swaymsg -t get_outputs 2>/dev/null | jq -r '.[] | select(.name != "eDP-1") | .name' 2>/dev/null | sort 2>/dev/null)
+
+            if [[ ${#external_outputs[@]} -lt 1 ]]; then
+                echo "Error: No external displays found." >&2
+                return 1
+            fi
+
+            local left="${external_outputs[-1]}"
+            local right="${external_outputs[0]}"
+
+            swaymsg "output $left enable; output $right enable; output $left pos 0 0; output $right pos 1920 0; output eDP-1 disable" >/dev/null
+            echo "Switched to dock mode."
+            ;;
+        toggle)
+            local eDP_status
+            eDP_status=$(swaymsg -t get_outputs | jq -r '.[] | select(.name=="eDP-1") | .active' 2>/dev/null)
+
+            if [[ "$eDP_status" == "true" ]]; then
+                ru_ds dock
+            else
+                ru_ds laptop
+            fi
+            ;;
+        *)
+            echo "Error: Unknown mode '$mode'. Use 'laptop', 'dock' or 'toggle'." >&2
+            return 1
+            ;;
+    esac
+}
+
 # -----------------------------------
 # EXECUTION GUARD
 # -----------------------------------
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     ru "$@"
 fi
+

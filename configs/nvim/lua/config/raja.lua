@@ -22,3 +22,7 @@ vim.o.termguicolors = true
 
 -- Fixes my problem with zz screen centering
 vim.o.lazyredraw = true
+
+-- Add line at 80 char
+vim.opt.colorcolumn = "80"
+

@@ -1,5 +1,5 @@
 {
-  "LuaSnip": { "branch": "master", "commit": "eda5be8f0ce9816278671f0b578cdbb8b762c701" },
+  "LuaSnip": { "branch": "master", "commit": "66b5c2707e624dcd2cd3605676c64a2efe47e9d1" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "a8912b88ce488f411177fc8aed358b04dc246d7b" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
   "dashboard-nvim": { "branch": "master", "commit": "c42fcfbd96dfcaa486c0a0ab52494316f1c31350" },

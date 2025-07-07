@@ -5,18 +5,18 @@
 # -----------------------------------
 VERSION="0.1.0"
 SCRIPT_DIR="$(realpath "$(dirname "$0")/scripts")"
-TARGET_DIR="$HOME/.local/bin"
+SCIRPTS_TARGET_DIR="$HOME/.local/bin"
 
 # Ensure target bin directory exists
-mkdir -p "$TARGET_DIR"
+mkdir -p "$SCIRPTS_TARGET_DIR"
 
 echo "Installing scripts from: $SCRIPT_DIR"
-echo "Linking to: $TARGET_DIR"
+echo "Linking to: $SCIRPTS_TARGET_DIR"
 
 # Process each .sh script in scripts/
 for script in "$SCRIPT_DIR"/*.sh; do
     script_name="$(basename "$script" .sh)"
-    target_link="$TARGET_DIR/$script_name"
+    target_link="$SCIRPTS_TARGET_DIR/$script_name"
 
     chmod +x "$script"
 
@@ -31,9 +31,9 @@ for script in "$SCRIPT_DIR"/*.sh; do
 done
 
 # Check PATH contains ~/.local/bin
-if [[ ":$PATH:" != *":$TARGET_DIR:"* ]]; then
+if [[ ":$PATH:" != *":$SCIRPTS_TARGET_DIR:"* ]]; then
     echo ""
-    echo "Note: $TARGET_DIR is not in your PATH."
+    echo "Note: $SCIRPTS_TARGET_DIR is not in your PATH."
     echo "Add the following line to your shell config (~/.bashrc or ~/.zshrc):"
     echo "export PATH=\"\$HOME/.local/bin:\$PATH\""
 else
