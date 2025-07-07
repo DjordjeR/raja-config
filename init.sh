@@ -3,9 +3,12 @@
 # -----------------------------------
 # CONFIGURATION
 # -----------------------------------
+
 VERSION="0.1.0"
-SCRIPT_DIR="$(realpath "$(dirname "$0")/scripts")"
-SCIRPTS_TARGET_DIR="$HOME/.local/bin"
+WORKING_DIR="$(realpath "$(dirname "$0")")"
+SCRIPT_DIR="$WORKING_DIR/scripts"
+SCRIPTS_TARGET_DIR="$HOME/.local/bin"
+CONFIG_TARGET_DIR="$HOME/.config"
 
 # Ensure target bin directory exists
 mkdir -p "$SCIRPTS_TARGET_DIR"
@@ -41,8 +44,8 @@ else
     echo "All scripts are installed and available in your shell."
 fi
 
-# TODO: Change paths to the configure options 
 # Apply saved configurations
-ln -sf /home/raja/Projects/raja-config/configs/nvim ~/.config/nvimh
-ln -sf /home/raja/Projects/raja-config/configs/zshrc ~/.config/zsh/.zshrc
-ln -sf /home/raja/Projects/raja-config/sway/01-raja.conf /home/raja/.config/sway/config.d/01-raja.conf
+ln -sf "$WORKING_DIR/configs/nvim"    "$CONFIG_TARGET_DIR/nvim"
+ln -sf "$WORKING_DIR/configs/zshrc"   "$CONFIG_TARGET_DIR/zsh/.zshrc"
+ln -sf "$WORKING_DIR/sway"            "$CONFIG_TARGET_DIR/sway"
+ln -sf "$WORKING_DIR/waybar"          "$CONFIG_TARGET_DIR/waybar"
