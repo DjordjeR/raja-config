@@ -5,6 +5,7 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
+    "windwp/nvim-autopairs",  -- added autopairs as dependency here
   },
   config = function()
     local cmp = require("cmp")
@@ -43,6 +44,18 @@ return {
         { name = "luasnip" },
       },
     })
+
+    -- Setup nvim-autopairs integration with cmp
+    local autopairs_ok, autopairs = pcall(require, "nvim-autopairs")
+    if autopairs_ok then
+      autopairs.setup({
+        check_ts = true,
+        disable_filetype = { "TelescopePrompt", "vim" },
+      })
+
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+    end
   end,
 }
 

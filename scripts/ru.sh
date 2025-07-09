@@ -102,6 +102,11 @@ ru_op() {
         echo "Usage: ru op <project_path> [-pt <c|python|rust>] [workspace_id]" >&2
         return 1
     fi
+    if [[ ! -d "$project_path" ]]; then
+        echo "Error: Project path '$project_path' does not exist or is not a directory." >&2
+        return 1
+    fi
+
     case "$project_type" in
         c|python|rust)
             ;;
@@ -125,20 +130,33 @@ ru_op() {
 # -----------------------------------
 # LAYOUT: C Project (default)
 # -----------------------------------
+
 ru_op_c_layout() {
     local project_path="$1"
     local workspace_id="$2"
 
-    # Combined swaymsg commands atomically, suppress stdout only
-    swaymsg "workspace number $workspace_id; \
-        exec $TERMINAL --working-directory \"$project_path\" --title 'Vim' -e $SHELL_CMD -c 'nvim -c \"vs\"; exec $SHELL_CMD'; \
-        split vertical; \
-        exec $TERMINAL --working-directory \"$project_path\" --title 'Build' $SHELL_EXEC_ARGS; \
-        split horizontal; \
-        exec $TERMINAL --working-directory \"$project_path\" --title 'Run' $SHELL_EXEC_ARGS; \
-        focus up; \
-        resize set height 90 ppt" >/dev/null
+    swaymsg "workspace number $workspace_id" >/dev/null
+
+    # Launch Vim (top)
+    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Vim' -e $SHELL_CMD -c 'nvim \"$project_path\" -c \"vs\"; exec $SHELL_CMD'" >/dev/null
+    sleep 0.3
+
+    # Split vertically (bottom)
+    swaymsg "split vertical" >/dev/null
+    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Build' $SHELL_EXEC_ARGS" >/dev/null
+    sleep 0.3
+
+    # Split horizontally (right bottom)
+    swaymsg "split horizontal" >/dev/null
+    swaymsg "exec $TERMINAL --working-directory \"$project_path\" --title 'Run' $SHELL_EXEC_ARGS" >/dev/null
+    sleep 0.3
+
+    # Focus Vim (up) and resize
+    swaymsg "focus up" >/dev/null
+    swaymsg "resize set height 90 ppt" >/dev/null
 }
+
+
 # -----------------------------------
 # COMMAND: ds (Display Setup)
 # -----------------------------------

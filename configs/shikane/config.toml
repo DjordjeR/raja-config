@@ -1,0 +1,64 @@
+[[profile]]
+name = "laptop"
+
+[[profile.output]]
+search = "eDP-1"
+enable = true
+mode = "1920x1080"
+position = "0,0"
+scale = 1.0
+
+[[profile]]
+name = "docked-single"
+
+[[profile.output]]
+search = "eDP-1"
+enable = false
+
+[[profile.output]]
+search = "DP-5"
+enable = true
+mode = "1920x1080"
+position = "0,0"
+scale = 1.0
+
+[[profile]]
+name = "dual"
+
+[[profile.output]]
+search = "eDP-1"
+enable = true
+mode = "1920x1080"
+position = "0,0"
+scale = 1.0
+
+[[profile.output]]
+search = "DP-5"
+enable = true
+mode = "1920x1080"
+position = "1920,0"
+scale = 1.0
+
+[[profile]]
+name = "triple"
+
+[[profile.output]]
+search = "eDP-1"
+enable = true
+mode = "1920x1080"
+position = "0,0"
+scale = 1.0
+
+[[profile.output]]
+search = "DP-5"
+enable = true
+mode = "1920x1080"
+position = "1920,0"
+scale = 1.0
+
+[[profile.output]]
+search = "DP-7"
+enable = true
+mode = "1920x1080"
+position = "3840,0"
+scale = 1.0

@@ -5,39 +5,31 @@
  * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
  *
  * =========================================================================== */
-
 /* import css definitions for current theme */
-
 /* -----------------------------------------------------------------------------
  * Keyframes
  * -------------------------------------------------------------------------- */
-
 @keyframes blink-warning {
     70% {
         color: @wm_icon_bg;
     }
-
     to {
         color: @wm_icon_bg;
         background-color: @warning_color;
     }
 }
-
 @keyframes blink-critical {
     70% {
         color: @wm_icon_bg;
     }
-
     to {
         color: @wm_icon_bg;
         background-color: @error_color;
     }
 }
-
 /* -----------------------------------------------------------------------------
  * Base styles
  * -------------------------------------------------------------------------- */
-
 /* Reset all styles */
 * {
     border: none;
@@ -47,14 +39,12 @@
     padding: 0;
     font-family: "JetBrainsMono NF", "Roboto Mono", sans-serif;
 }
-
 /* The whole bar */
 window#waybar {
-    background: @theme_base_color;
+    background: transparent;
     color: @theme_text_color;
     font-size: 14px;
 }
-
 /* Each module */
 #custom-pacman,
 #custom-menu,
@@ -85,97 +75,86 @@ window#waybar {
 #tray {
     padding-left: 8px;
     padding-right: 8px;
+    background: transparent;
+    border-radius: 8px;
+    margin: 2px;
 }
-
 /* -----------------------------------------------------------------------------
  * Module styles
  * -------------------------------------------------------------------------- */
-
 #custom-scratchpad,
 #custom-menu,
 #workspaces button.focused,
 #clock {
-    color: @theme_bg_color;
+    color: @theme_text_color;
     background-color: @theme_selected_bg_color;
+    border-radius: 8px;
 }
-
 #custom-zeit.tracking {
     background-color: @warning_color;
+    border-radius: 8px;
 }
-
 #battery {
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
-
 #battery.warning {
     color: @warning_color;
 }
-
 #battery.critical {
     color: @error_color;
 }
-
 #battery.warning.discharging {
     animation-name: blink-warning;
     animation-duration: 3s;
 }
-
 #battery.critical.discharging {
     animation-name: blink-critical;
     animation-duration: 2s;
 }
-
 #clock {
     font-weight: bold;
 }
-
 #cpu.warning {
     color: @warning_color;
 }
-
 #cpu.critical {
     color: @error_color;
 }
-
 #custom-menu {
     padding-left: 8px;
     padding-right: 13px;
 }
-
 #memory {
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
-
 #memory.warning {
     color: @warning_color;
 }
-
 #memory.critical {
     color: @error_color;
     animation-name: blink-critical;
     animation-duration: 2s;
 }
-
 #mode {
     background: @background_color;
+    border-radius: 8px;
 }
-
 #network.disconnected {
     color: @warning_color;
 }
-
 #pulseaudio.muted {
     color: @warning_color;
 }
-
 #temperature.critical {
     color: @error_color;
 }
-
+#workspaces {
+    background: transparent;
+}
 #workspaces button {
     border-top: 2px solid transparent;
     /* To compensate for the top border and still have vertical centering */
@@ -183,34 +162,32 @@ window#waybar {
     padding-left: 10px;
     padding-right: 10px;
     color: @theme_selected_bg_color;
+    background: transparent;
+    border-radius: 8px;
+    margin: 2px;
 }
-
 #workspaces button.focused {
     border-color: @theme_selected_bg_color;
+    background-color: @theme_selected_bg_color;
 }
-
 #workspaces button.urgent {
     border-color: @error_color;
     color: @error_color;
 }
-
 #workspaces button:hover {
     color: @theme_bg_color;
+    background-color: rgba(255, 255, 255, 0.1);
 }
-
 #custom-pacman {
     color: @warning_color;
 }
-
 #bluetooth.disabled {
     color: @warning_color;
 }
-
 #custom-wf-recorder {
     color: @error_color;
     padding-right: 10px;
 }
-
 #custom-valent.dangerously-empty {
     color: @warning_color;
 }
