@@ -1,0 +1,108 @@
+* {
+  font: "Fira Code 10";
+  background: rgba(20, 15, 25, 0.95);
+  text-color: #e6e1ff;
+  selected: #b794f6;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+window {
+  background-color: rgba(25, 20, 30, 0.92);
+  border: 1px;
+  border-color: rgba(183, 148, 246, 0.3);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+mainbox {
+  background-color: transparent;
+  children: [inputbar, listview];
+  spacing: 8px;
+}
+
+inputbar {
+  prompt: "Launch";
+  background-color: rgba(45, 35, 55, 0.8);
+  border: 1px;
+  border-color: rgba(183, 148, 246, 0.2);
+  border-radius: 8px;
+  padding: 6px 8px;
+  children: [prompt, entry];
+}
+
+prompt {
+  text-color: #b794f6;
+  padding: 0 8px 0 0;
+}
+
+entry {
+  padding: 0;
+  expand: true;
+  text-color: #e6e1ff;
+}
+
+listview {
+  lines: 6;
+  columns: 1;
+  dynamic: true;
+  scrollbar: false;
+  spacing: 4px;
+  background-color: transparent;
+}
+
+element {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: transparent;
+  text-color: #e6e1ff;
+}
+
+element normal.normal {
+  background-color: transparent;
+  text-color: #e6e1ff;
+}
+
+element normal.active {
+  background-color: rgba(183, 148, 246, 0.15);
+  text-color: #b794f6;
+}
+
+element selected.normal {
+  background-color: rgba(183, 148, 246, 0.25);
+  text-color: #ffffff;
+  border: 1px;
+  border-color: rgba(183, 148, 246, 0.4);
+}
+
+element selected.active {
+  background-color: rgba(159, 122, 234, 0.3);
+  text-color: #ffffff;
+  border: 1px;
+  border-color: #9f7aea;
+}
+
+element alternate.normal {
+  background-color: transparent;
+  text-color: #e6e1ff;
+}
+
+element-icon {
+  size: 20px;
+  padding: 0 8px 0 0;
+}
+
+element-text {
+  expand: true;
+  text-color: #e6e1ff;
+  font-size: 10px;
+}
+
+scrollbar {
+  width: 2px;
+  border: 0;
+  handle-color: rgba(183, 148, 246, 0.5);
+  handle-width: 2px;
+  padding: 0;
+}
+
