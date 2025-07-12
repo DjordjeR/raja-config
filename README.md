@@ -4,6 +4,7 @@ This repository is where I store my personal configurations and utility scripts.
 
 The goal of this repo is to centralize and version-control these files for easy reuse and maintenance across different systems.
 
+Uses: toml-bombadil
 ## Contents
 
 - Configuration files for various tools and environments
