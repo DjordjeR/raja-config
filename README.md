@@ -1,28 +1,35 @@
 # Raja Config
 
-This repository is where I store my personal configurations and utility scripts. It includes settings, preferences, and tools that I use to set up and manage my development environment.
+This repository contains my personal configurations and utility scripts used to set up and manage my development environment.
 
-The goal of this repo is to centralize and version-control these files for easy reuse and maintenance across different systems.
+By leveraging [Bombadil](https://github.com/oknozor/bombadil), configuration files and scripts are easily managed, deployed, and version-controlled across multiple systems.
 
-Uses: toml-bombadil
-## Contents
+## What’s inside
 
-- Configuration files for various tools and environments
-- Utility scripts for setup and automation
+- Dotfiles and configs for various tools and environments (e.g., `nvim`, `zsh`, `sway`, `waybar`, and more)
+- Utility scripts for automation and setup
 
-### Configurations
+## Getting Started
 
-* nvim
-    * `ln -sf /home/raja/Projects/raja-config/configs/nvim ~/.config/nvim`
-* zsh
-    * `ln -sf /home/raja/Projects/raja-config/configs/zshrc ~/.config/zsh/.zshrc`
-    * `ln -sf /home/raja/Projects/raja-config/configs/zshrc ~/.zshrc`
+Use Bombadil to install and manage your dotfiles with minimal effort:
 
-## Usage
+```bash
+# Create symlinks for all configured files
+bombadil link --force
 
-Feel free to explore or adapt anything that might be useful for your own setup. However, this repository is primarily intended for personal use.
+# To remove symlinks created by Bombadil
+bombadil unlink
+
+# To check what Bombadil will link/unlink without making changes
+bombadil dry-run
+```
+
+This will symlink all configured files according to the `bombadil.toml` manifest.
+
+## Contributing
+
+This repository is primarily for personal use, but feel free to explore and adapt as needed.
 
 ## License
 
 This project is open-source under the [MIT License](LICENSE).
-
